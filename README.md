@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="th">
 <head>
 <meta charset="utf-8">
@@ -528,12 +527,12 @@ function stockTab(){var h='<h1>สต็อก ของเสีย และ�
 var PROV="กระบี่,กรุงเทพมหานคร,กาญจนบุรี,กาฬสินธุ์,กำแพงเพชร,ขอนแก่น,จันทบุรี,ฉะเชิงเทรา,ชลบุรี,ชัยนาท,ชัยภูมิ,ชุมพร,เชียงราย,เชียงใหม่,ตรัง,ตราด,ตาก,นครนายก,นครปฐม,นครพนม,นครราชสีมา,นครศรีธรรมราช,นครสวรรค์,นนทบุรี,นราธิวาส,น่าน,บึงกาฬ,บุรีรัมย์,ปทุมธานี,ประจวบคีรีขันธ์,ปราจีนบุรี,ปัตตานี,พระนครศรีอยุธยา,พะเยา,พังงา,พัทลุง,พิจิตร,พิษณุโลก,เพชรบุรี,เพชรบูรณ์,แพร่,ภูเก็ต,มหาสารคาม,มุกดาหาร,แม่ฮ่องสอน,ยโสธร,ยะลา,ร้อยเอ็ด,ระนอง,ระยอง,ราชบุรี,ลพบุรี,ลำปาง,ลำพูน,เลย,ศรีสะเกษ,สกลนคร,สงขลา,สตูล,สมุทรปราการ,สมุทรสงคราม,สมุทรสาคร,สระแก้ว,สระบุรี,สิงห์บุรี,สุโขทัย,สุพรรณบุรี,สุราษฎร์ธานี,สุรินทร์,หนองคาย,หนองบัวลำภู,อ่างทอง,อำนาจเจริญ,อุดรธานี,อุตรดิตถ์,อุทัยธานี,อุบลราชธานี".split(","),AD=null,ERR={};
 function buildAddr(){if(!window.THD)return;var A={};try{window.THD.forEach(function(z){var pm={},dm={};(z.provinceList||[]).forEach(function(x){pm[x.provinceId]=x.provinceName});(z.districtList||[]).forEach(function(x){dm[x.districtId]=x.districtName});(z.subDistrictList||[]).forEach(function(s){var pn=pm[s.provinceId],dn=dm[s.districtId];if(!pn||!dn)return;var P=A[pn]=A[pn]||{},D=P[dn]=P[dn]||{},L=D[s.subDistrictName]=D[s.subDistrictName]||[];if(L.indexOf(String(z.zipCode))<0)L.push(String(z.zipCode))})});AD=A}catch(e){AD=null}}
 addEventListener("thd",function(){buildAddr();render()});
-function ks(o){return Object.keys(o||{}).sort(function(a,b){return a.localeCompare(b,"th")})}
+var COLL=new Intl.Collator("th");function ks(o){return Object.keys(o||{}).sort(COLL.compare)}
 function req(t){return t!=="P"||ROLE==="merchant"}
-function bad(t,k,kind){return ERR[t]&&(kind==="a"||(kind==="v"&&req(t)))&&!String(gT(t)[k]||"").trim()}
-function fw(t,k,lab,body,kind){var r=kind==="a"||(kind==="v"&&req(t));return'<label style="margin-top:10px">'+lab+(r?' <span class="neg">*</span>':(kind==="o"||kind==="v"?' <span style="opacity:.8">(ไม่บังคับ)</span>':''))+body+(bad(t,k,kind)?'<div class="neg" style="font-size:13px">จำเป็นต้องกรอก</div>':'')+'</label>'}
-function inH(t,k,kind,type){var p=gT(t);return'<input'+(type?' type="'+type+'"':'')+' value="'+esc(p[k])+'"'+(p.locked?' disabled':'')+(bad(t,k,kind)?' style="border-color:var(--bad)"':'')+' oninput="fs(\''+t+'\',\''+k+'\',this.value)">'}
-function slH(t,k,kind,opts,ph,fn){var p=gT(t);return'<select'+(p.locked?' disabled':'')+(bad(t,k,kind)?' style="border-color:var(--bad)"':'')+' onchange="'+(fn||"fs")+'(\''+t+'\',\''+k+'\',this.value)"><option value="">'+ph+'</option>'+opts.map(function(x){return'<option'+(p[k]===x?' selected':'')+'>'+esc(x)+'</option>'}).join("")+'</select>'}
+function isBad(t,k,kind){return ERR[t]&&(kind==="a"||(kind==="v"&&req(t)))&&!String(gT(t)[k]||"").trim()}
+function fw(t,k,lab,body,kind){var r=kind==="a"||(kind==="v"&&req(t));return'<label style="margin-top:10px">'+lab+(r?' <span class="neg">*</span>':(kind==="o"||kind==="v"?' <span style="opacity:.8">(ไม่บังคับ)</span>':''))+body+(isBad(t,k,kind)?'<div class="neg" style="font-size:13px">จำเป็นต้องกรอก</div>':'')+'</label>'}
+function inH(t,k,kind,type){var p=gT(t);return'<input'+(type?' type="'+type+'"':'')+' value="'+esc(p[k])+'"'+(p.locked?' disabled':'')+(isBad(t,k,kind)?' style="border-color:var(--bad)"':'')+' oninput="fs(\''+t+'\',\''+k+'\',this.value)">'}
+function slH(t,k,kind,opts,ph,fn){var p=gT(t);return'<select'+(p.locked?' disabled':'')+(isBad(t,k,kind)?' style="border-color:var(--bad)"':'')+' onchange="'+(fn||"fs")+'(\''+t+'\',\''+k+'\',this.value)"><option value="">'+ph+'</option>'+opts.map(function(x){return'<option'+(p[k]===x?' selected':'')+'>'+esc(x)+'</option>'}).join("")+'</select>'}
 function setA(t,k,v){var p=gT(t);p[k]=v;if(k==="prov"){p.dist="";p.sub="";p.zip=""}if(k==="dist"){p.sub="";p.zip=""}if(k==="sub"){var z=AD&&AD[p.prov]&&AD[p.prov][p.dist]&&AD[p.prov][p.dist][v];p.zip=z&&z.length===1?z[0]:""}save();render()}
 function addrH(t){var p=gT(t),h=fw(t,"prov","จังหวัด",slH(t,"prov","v",PROV,"เลือกจังหวัด","setA"),"v");
  if(!p.prov)return h;
@@ -541,9 +540,9 @@ function addrH(t){var p=gT(t),h=fw(t,"prov","จังหวัด",slH(t,"prov"
  h+=fw(t,"dist","อำเภอ/เขต",slH(t,"dist","v",ks(AD[p.prov]),"เลือกอำเภอ/เขต","setA"),"v");
  if(p.dist&&AD[p.prov][p.dist]){h+=fw(t,"sub","ตำบล/แขวง",slH(t,"sub","v",ks(AD[p.prov][p.dist]),"เลือกตำบล/แขวง","setA"),"v");
   var z=p.sub&&AD[p.prov][p.dist][p.sub];
-  h+=fw(t,"zip","รหัสไปรษณีย์ (เติมอัตโนมัติ)",(z&&z.length>1)?slH(t,"zip","v",z,"เลือกรหัสไปรษณีย์"):'<input value="'+esc(p.zip)+'" disabled'+(bad(t,"zip","v")?' style="border-color:var(--bad)"':'')+'>',"v")}
+  h+=fw(t,"zip","รหัสไปรษณีย์ (เติมอัตโนมัติ)",(z&&z.length>1)?slH(t,"zip","v",z,"เลือกรหัสไปรษณีย์"):'<input value="'+esc(p.zip)+'" disabled'+(isBad(t,"zip","v")?' style="border-color:var(--bad)"':'')+'>',"v")}
  return h}
-function pf(t,ttl){var p=gT(t),d=p.locked?" disabled":"",r=req(t),pb=bad(t,"img","v");
+function pf(t,ttl){var p=gT(t),d=p.locked?" disabled":"",r=req(t),pb=isBad(t,"img","v");
  return'<div class="card"><div class="top"><div class="av" style="width:72px;height:72px;'+(pb?'border-color:var(--bad);border-style:solid;':'')+'">'+(p.img?'<img alt="" src="'+p.img+'">':'<span>รูป'+(r?' <span class="neg">*</span>':'<br>(ไม่บังคับ)')+'</span>')+'<input type="file" accept="image/*" aria-label="แนบรูป"'+d+' onchange="tpic(\''+t+'\',this)"></div><div><b>'+esc(((p.pre||"")+" "+(p.name||"ยังไม่ระบุชื่อ")).trim())+'</b>'+(ttl?'<div class="note" style="margin:0">'+ttl+'</div>':'')+(pb?'<div class="neg" style="font-size:13px">จำเป็นต้องแนบรูป</div>':'')+(p.locked?'<span class="chip ok">บันทึกแล้ว</span>':'')+'</div></div>'
  +fw(t,"pre","คำนำหน้าชื่อ",slH(t,"pre","o",PRE,"เลือก"),"o")+fw(t,"name","ชื่อ-นามสกุล",inH(t,"name","a"),"a")+fw(t,"phone","เบอร์โทร",inH(t,"phone","a","tel"),"a")
  +fw(t,"shop","ชื่อร้าน/บริษัท",inH(t,"shop","v"),"v")+addrH(t)+fw(t,"addr","ที่อยู่ร้าน (บ้านเลขที่ ถนน หมู่บ้าน)",inH(t,"addr","v"),"v")
@@ -557,6 +556,11 @@ var _r4=render;render=function(){if(vsel&&tab!=="home"&&incomplete(vsel)){tab="h
  if(unlocked&&ROLE==="merchant"&&tab!=="acc"&&incomplete("P")){tab="acc";ERR.P=1}
  _r4()};
 setTimeout(function(){if(!window.THD&&!AD){render()}},6000);
+var _svT=null;
+function save(){S.saved=new Date().toLocaleTimeString("th-TH");stamp();clearTimeout(_svT);_svT=setTimeout(flush,350)}
+function flush(){clearTimeout(_svT);_svT=null;try{localStorage.setItem(KEY,JSON.stringify(S));bad=false}catch(e){bad=true}stamp()}
+addEventListener("pagehide",flush);document.addEventListener("visibilitychange",function(){if(document.hidden)flush()});
+var _r5=render;render=function(){try{_r5()}catch(e){console.error(e);var a=document.getElementById("app");if(a)a.innerHTML='<div class="card"><h2>เกิดข้อผิดพลาด</h2><p class="sub">'+esc(e.message)+'</p><div class="bar"><button onclick="tab=\'home\';ov=\'\';vsel=null;render()">กลับหน้าแรก</button></div></div>'}};
 function render(){
  document.getElementById("app").innerHTML=(tab==="ship"?shipTab():!unlocked?lockHTML():(PERM[tab]||[ROLE]).indexOf(ROLE)<0?noPerm():tab==="acc"?accTab():tab==="pos"?posTab():tab==="rep"?repTab()+editLog()+shipLog():fruitTab())+ovHTML();
  document.getElementById("nav").innerHTML=navTabs().map(function(x){return'<button class="'+(tab===x[0]?"on":"")+'" onclick="tab=\''+x[0]+'\';ov=\'\';render();scrollTo(0,0)">'+x[1]+'</button>'}).join("");
